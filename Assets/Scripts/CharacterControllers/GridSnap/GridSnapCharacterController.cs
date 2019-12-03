@@ -7,19 +7,26 @@ namespace Blooper{
     //Extremely simple character controller.
     public class GridSnapCharacterController : MonoBehaviour
     {
-        public bool canMove = true;//
+        [Header("Global Settings")]
+        [Tooltip("The size in manhattan distance of our square grid, in unity's units.")]
         public float gridScale = 1f;
         //public Vector3 offset;//I am snapping to the default Unity Grid.
         //We are "storing" the grid information as collision shapes in the scene, and will assume everything is "snapped" to the grid
         //We will also assume the character is moves this scale every frame. What if it was 2 squares wide? DOes it move one or two squares?
         //This controller will handle none of these sorts of edge cases. 
-
+        
+        [Tooltip("Which layers should prevent us from moving? ie: which layer are the walls/environment on?")]
         public LayerMask collisionLayers;//Stores which layers we will collide with for movement.
-
+        [Tooltip("Probably using layers (useLayers = true AND a layer mask defined), define how the things we can interact with are identified.")]
         public ContactFilter2D interactablesContactFilter;
         //Move takes a vector2Int, which is the same as vector2 but using int's instead of float's, we have no need for float precision) with a grid system.
         //That will save us some potential bugs, and improve the performance by like 0.001%.
+        
+        [Space]
 
+        [Header("Player Settings")]
+        [Tooltip("Player can only move when true. Will not turn true on start.")]
+        public bool canMove = true;//
         private Collider2D col;
         void Awake(){//Lets get all our component calls in awake.
             col = GetComponent<Collider2D>();
