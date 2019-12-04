@@ -20,6 +20,8 @@ public class PlatformerCharacterController : MonoBehaviour
     [Tooltip("Smaller the skin width, less buggy when clipping through corners, but greater means greater max speed before things break")]
     [SerializeField] private float skinWidth;
     [SerializeField] private float jumpSpeed;
+    [SerializeField] private float movementSpeed;
+    [SerializeField] private float groundFriction;
     //Properties
     [Header("Status")]
     public bool grounded;
@@ -30,15 +32,22 @@ public class PlatformerCharacterController : MonoBehaviour
     public bool showcastLines = true;
     void Start()
     {
+        //The second property of the Debug.LogXXX is what will get highlighted when we double click on the message/warning/error.
         if(skinWidth == 0 && showWarnings){
-            Debug.LogWarning("SkinWidth is 0! Weird. Character may have collision errors.",this);
+            Debug.LogWarning("SkinWidth is 0! Weird. Character may have collision errors.",gameObject);
         }
         if(jumpSpeed == 0 && showWarnings){
-            Debug.LogWarning("JumpSpeed is 0! Weird. Character can't jump. Is this intended?",this);
+            Debug.LogWarning("JumpSpeed is 0! Weird. Character can't jump. Is this intended?",gameObject);
+        }
+        if(groundFriction == 0 && showWarnings){
+            Debug.LogWarning("Ground Friction is 0! Player is slippyslidey. Is this intended?",gameObject);
+        }
+        if(movementSpeed == 0 && showWarnings){
+            Debug.LogWarning("Movement Speed is 0! Player cant move horiontally.",gameObject);
         }
         if(Physics2D.queriesStartInColliders && showWarnings){
             //We could manually set this to true here but thats super rude. Adding a component, wrong one, meant another one, and now project settings are different? 
-            Debug.LogWarning("Physics2D queriesStartInColliders needs to be false! Change this in the Physics2D settings.",this);
+            Debug.LogWarning("Physics2D queriesStartInColliders needs to be false! Change this in the Physics2D settings.");
         }
         //Initiate
         velocity = Vector2.zero;
@@ -53,6 +62,15 @@ public class PlatformerCharacterController : MonoBehaviour
         velocity = velocity+gravity*Time.deltaTime;
         //Apply Forces
         velocity = velocity+externalForces*Time.deltaTime;
+        //Apply Friction
+        if(grounded){
+            //Should we ignore this when player is giving us horizontal input? Probably! but I dont have time for that.
+            if(velocity.x>0){
+                velocity = velocity+new Vector2(-groundFriction,0)*Time.deltaTime;
+            }else if (velocity.x < 0){
+                velocity = velocity+new Vector2(groundFriction,0)*Time.deltaTime;
+            }
+        }
 
         //Check for collisions
         bool vimpact = false;
@@ -150,7 +168,8 @@ public class PlatformerCharacterController : MonoBehaviour
         velocity = newVel;
     }
     public void PushHorizontal(float force){
-        externalForces.x = force;
+        force = Mathf.Clamp(force,-1,1);
+        externalForces.x = force*movementSpeed;
     }
     public void Jump(){
         velocity.y = jumpSpeed;

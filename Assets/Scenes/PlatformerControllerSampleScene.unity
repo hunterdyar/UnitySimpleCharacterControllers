@@ -890,6 +890,8 @@ MonoBehaviour:
   characterHeight: 1
   skinWidth: 0.33
   jumpSpeed: 9
+  movementSpeed: 9
+  groundFriction: 4
   grounded: 0
   showWarnings: 1
   showcastLines: 1
@@ -905,7 +907,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68ff716356797ff41848816df429915c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementForce: 16
 --- !u!1 &844542110
 GameObject:
   m_ObjectHideFlags: 0

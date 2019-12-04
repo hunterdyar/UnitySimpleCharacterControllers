@@ -9,7 +9,6 @@ public class PlatformerInput : MonoBehaviour
     PlatformerCharacterController controller;
     bool extraJump;
     int jumps = 0;
-    public float movementForce;
     void Awake(){
         controller = GetComponent<PlatformerCharacterController>();
     }
@@ -24,6 +23,6 @@ public class PlatformerInput : MonoBehaviour
             controller.Jump();
             jumps++;
         }
-        controller.PushHorizontal(Input.GetAxis("Horizontal")*movementForce);
+        controller.PushHorizontal(Input.GetAxis("Horizontal"));
     }
 }
