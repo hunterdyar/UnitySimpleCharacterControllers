@@ -7,7 +7,7 @@ namespace Blooper{
     //Extremely simple character controller.
     public class GridSnapCharacterController : MonoBehaviour
     {
-        [Header("Global Settings")]
+        [Header("Global Settings")]//all of these [] things are called "attributes" and they do not affect the code, just are for the unity inspector.
         [Tooltip("The size in manhattan distance of our square grid, in unity's units.")]
         public float gridScale = 1f;
         //public Vector3 offset;//I am snapping to the default Unity Grid.
@@ -27,6 +27,7 @@ namespace Blooper{
         [Header("Player Settings")]
         [Tooltip("Player can only move when true. Will not turn true on start.")]
         public bool canMove = true;//
+        private bool isDead = false;//Notice i called this "isDead" not "dead". it's nice, grammatically, to have booleans make define themselves when you think of them as true or false. 
         private Collider2D col;
         void Awake(){//Lets get all our component calls in awake.
             col = GetComponent<Collider2D>();
@@ -34,6 +35,11 @@ namespace Blooper{
         void Start(){//I did all my component calls in awake, and I could do this too. I'm doing it in Start because of a pattern (first get references, next access them) that isn't necessary here.
         //But if we start using it, we will just HIT LESS BUGS and life will be easier.
             SnapToGrid();
+
+            ////re-init variables in case we fiddle with them in the inspector on accident.
+            //(This is commented out because doing this makes testing debug states harder.)
+            // isDead = false;
+            // canMove = true;
         }
         void FixedUpdate(){
             //Fixed update is for physics things, but NOT input. it will miss input. Dont sweat the details of the two simultaneously running update ticks at different speeds. just remember fixed update for physics engine stuff.
@@ -84,7 +90,7 @@ namespace Blooper{
             
         }
         public bool CheckDirection(Vector2Int direction){
-            //Physcs2D.Raycast is great. It, instantly, marches a line out from a point (argument 1), in a direction (argument 2), for so-many units (argument 3), until it hits something (valid things to hit: argument 4). 
+            //Physics2D.Raycast is great. It, instantly, marches a line out from a point (argument 1), in a direction (argument 2), for so-many units (argument 3), until it hits something (valid things to hit: argument 4). 
             //It then tells us what happened in this neat data-holder called a RaycastHit. The RaycastHit2D just stores info about the collision, kind of like the Collision object that the OnCOllisionEnter event function gives us. 
             RaycastHit2D hit = Physics2D.Raycast(transform.position,(Vector2)direction, gridScale,collisionLayers);
             //Raycast2D and Physics (3D) raycasts have a slightly different syntax, FYI. Can't copy/paste and remove the 2d part, sorry. 
@@ -92,8 +98,9 @@ namespace Blooper{
             //One problem is that we hit OURSELF!? We can collide with THIS collider. Physics2D.Raycast doesn't know who is calling the raycast! It has no idea what collider is attached here, or if any.
             //Madness. Solution: Collision layers! We can put the player on a different layer then the background world! Then just set the collisionLayers accordingly: Raycast against background and not with player. 
 
-            //Either set the player to like IgnoreRaycast, or make a layer for Level. 
-            //The other option is to go into Physics2D Settings and uncheck "Queries Start In Colliders", which is what I would do if this example project didn't have to support other systems of movement too.
+            //Either set the player layer to IgnoreRaycast or make a layer for Level separate from the player. 
+            //The other option is to go into Physics2D Settings and un-check "Queries Start In Colliders", which is what I would do if this example project didn't have to support other systems of movement too.
+            //Edit: I may have done that for the platformer example? It's a bit cleaner (less "dependent" on project settings) to use layer masks.
                 return false;
             }else{
                 return true;
@@ -114,15 +121,46 @@ namespace Blooper{
                         break;//ends the loop. If we have death and maybe a pickup item on the same tile, we would order these if statements so it hits the death one first.
                     }else if(interactCol.CompareTag("Item")){
                         //Check if the item has a component like "key" and if it does, maybe run a public function that key component has. Maybe some function that like, destroys a door?
-                        Destroy(interactCol.gameObject);//"pick up" the item
-                        //some integer score = score+1; or whatever we're doing here.
+                        Destroy(interactCol.gameObject);//"pick up" the item.
+                        
+                        //insert here: some score = score+1; or whatever we're doing here.
+
+                        //Destroying it is simple, we may want to have that thing have an item component (check if it has that component instead of the tag), and then call a "pickup" funciton on that.
+                        
+                        //doing it that way lets the coin deal with itself - how it should be destroyed - and lets the coin deal with the result of it being picked up. -- is it worth points or nah?
+                        //the character controller shouldn't care about the score, right? It just says "okay i picked you up" and the coin can go "okay great".
                     }//etc etc.
                 }
             }
         }
         void CharacterDied(){
+            if(isDead)
+            {
+                return;//This ends this function right here right now. //Prevents us from running the characterDied code more than once.
+                //This is currently the only use of the isDead function, but I've had enough "Can't kill what's already dead" bugs in my life to include it here.
+            }
             
-            canMove = false;
+            isDead = true;//we ded. Be sure to put this code AFTER the above if statement.
+
+
+            //Of the 4 options below, any of them work to be "death". 
+
+            //1
+            canMove = false;//Controller could get re-enabled so we move again, like a sticky-trap or something.
+            //2
+            // this.enabled = false;//Disabling this script completely means we cant move but player still exists - a death animation could take over, for example.
+            //3
+            // GetComponent<GridSnapCharacterInput>().enabled = false;//Disabling input means we can't move, but controller - this script - could manipulate the character to do death.
+            //This isn't preferred, because we introduce a dependency - this script now needs the input script to exist, so it would be a pain to use this controller to, say, move AI.
+            //So don't do this one.
+
+            //4
+            //gameObject.SetActive(false);//Basically the player goes "poof" entirely. We would use this if we, say, instantiate a particle system or a new death game object.
+            //5
+            //Destroy(GameObject);//same as 4 in practice. Good if we are using this for, say, enemies/AI that we don't want to stick around in the games memory after we kill them.
+            
+            
+            ////////     
             Debug.Log("we ded");
             //This is going to get called like a hundred times. The solution to that is to make a "isDead" public boolean and check if it's true. and if it is, don't keep killing the player.
             //Thats just rude.
