@@ -4,7 +4,8 @@ using UnityEngine;
 
 namespace Blooper{
     //GridSnap Character Controller by Hunter Dyar
-    //Extremely simple character controller.
+    //Extremely simple character controller, used as example project for IMM202.
+
     public class GridSnapCharacterController : MonoBehaviour
     {
         [Header("Global Settings")]//all of these [] things are called "attributes" and they do not affect the code, just are for the unity inspector.
