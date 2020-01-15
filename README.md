@@ -15,3 +15,5 @@ A pretty bad platformer controller, missing lots of features and is buggy. But d
 # Twin Stick Character Controller
 Uses a rigidbody2D, but editing it's velocity directly to move.
 Also turns the player to face the mouse instantly.
+
+This example also has shooting. There is a bullet manager, bullets, and enemies. The code demonstrates an architecture where things tend to "handle themselves" and minimize dependencies. Notice how each script is actually fairly small, and doesn't do much that's really complicated as a script. The complexity comes from how the scripts all talk to each other. 
