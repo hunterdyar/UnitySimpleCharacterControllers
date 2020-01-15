@@ -18,7 +18,7 @@ public class TwinStickInput : MonoBehaviour
         //For a proper twin stick game I wouldn't use axis, because they fade back to center instead of snapping instantly.
         twinStickCharacter.Move(new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical")));
 
-        if(Input.GetMouseButtonDown(0)){
+        if(Input.GetMouseButton(0)){//This will KEEP trying to fire so long as we hold the button down every frame. The weapon manager has a timer to prevent too-rapid rapidfire.
             twinStickWeapons.Fire();
         }
     }
