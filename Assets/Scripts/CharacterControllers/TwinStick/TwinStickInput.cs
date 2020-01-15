@@ -5,9 +5,11 @@ using UnityEngine;
 public class TwinStickInput : MonoBehaviour
 {
     TwinStickCharacterController twinStickCharacter;
+    TwinStickWeaponManager twinStickWeapons;
     void Start()
     {
         twinStickCharacter = GetComponent<TwinStickCharacterController>();
+        twinStickWeapons = GetComponent<TwinStickWeaponManager>();
     }
 
     // Update is called once per frame
@@ -17,10 +19,7 @@ public class TwinStickInput : MonoBehaviour
         twinStickCharacter.Move(new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical")));
 
         if(Input.GetMouseButtonDown(0)){
-            twinStickCharacter.Fire();
-        }
-         if(Input.GetMouseButtonUp(0)){
-            twinStickCharacter.StopFire();
+            twinStickWeapons.Fire();
         }
     }
 }
