@@ -5,6 +5,7 @@ All contained in the "Blooper" namespace.
 
 # Grid Snap Controller
 A controller for moving a player in a grid-style game, with instant snapping. "position" based movement.
+The level is created with Unity's [tilemap](https://learn.unity.com/tutorial/introduction-to-tilemaps#) system.
 
 # AsteroidsCharacterController
 A controller that uses rigidbody2D forces to accelerate, rotate a player. "Acceleration" based movement.
