@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace Blooper.TwinStick{
 [RequireComponent(typeof(Rigidbody2D))]
 public class Bullet : MonoBehaviour
 {
@@ -22,4 +23,5 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);//Destroy myself.
         }//end if not player
     }//end onCollisionEnter
+}
 }
