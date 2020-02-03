@@ -18,3 +18,8 @@ Uses a rigidbody2D, but editing it's velocity directly to move.
 Also turns the player to face the mouse instantly.
 
 This example also has shooting. There is a bullet manager, bullets, and enemies. The code demonstrates an architecture where things tend to "handle themselves" and minimize dependencies. Notice how each script is actually fairly small, and doesn't do much that's really complicated as a script. The complexity comes from how the scripts all talk to each other. 
+
+# GGJ Platformer
+Platformer script I wrote for a project for Global Game Jam 2020. Doesn't use rigidbody, I do collisions and physics myself because it just works better and is easier to adjust, IMHO. I cleaned it up a bit, making it a bit more universal. It works pretty well, although still has some quirks. Collider shape is just a bounds that has to be set (I added tools to do this using a boxCollider2D or spriteRenderer).
+
+The example input uses Input.GetAxisRaw() which is good for fast and snappy keyboard input; there is no smoothing function on it. 
