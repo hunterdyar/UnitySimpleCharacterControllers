@@ -14,7 +14,8 @@ A controller that uses rigidbody2D forces to accelerate, rotate a player. "Accel
 A pretty bad platformer controller, missing lots of features and is buggy. But demonstrates how one would get started using raycasts instead of a rigidbody to move a player in this way. It'll take work to make it feel good, but there are bones here.
 
 # Twin Stick Character Controller
-Uses a rigidbody2D, but editing it's velocity directly to move.
+Uses a rigidbody2D. Uses .MovePosition and .MoveRotation functions in FixedUpdate to move.
+
 Also turns the player to face the mouse instantly.
 
 This example also has shooting. There is a bullet manager, bullets, and enemies. The code demonstrates an architecture where things tend to "handle themselves" and minimize dependencies. Notice how each script is actually fairly small, and doesn't do much that's really complicated as a script. The complexity comes from how the scripts all talk to each other. 
